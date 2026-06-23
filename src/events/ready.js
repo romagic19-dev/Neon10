@@ -15,7 +15,7 @@ export default {
                 client.user.setPresence({
                     status: 'online',
                     activities: [{
-                        name: `${client.guilds.cache.size} serveurs`,
+                        name: `${client.guilds.cache.size} servers`,
                         type: 3 // 3 = Watching (Regarde)
                     }]
                 });
