@@ -1,4 +1,4 @@
-import { Events } from "discord.js";
+import { Events, ActivityType } from "discord.js";
 import { logger, startupLog } from "../utils/logger.js";
 import config from "../config/application.js";
 import { reconcileReactionRoleMessages } from "../services/reactionRoleService.js";
@@ -10,12 +10,23 @@ export default {
   once: true,
 
   async execute(client) {
-    try {
-      client.user.setPresence(config.bot.presence);
+        try {
+            const updateStatus = () => {
+                client.user.setPresence({
+                    status: 'online',
+                    activities: [{
+                        name: `${client.guilds.cache.size} serveurs`,
+                        type: 3 // 3 = Watching (Regarde)
+                    }]
+                });
+            };
 
-      startupLog(`Ready! Logged in as ${client.user.tag}`);
-      startupLog(`Serving ${client.guilds.cache.size} guild(s)`);
-      startupLog(`Loaded ${client.commands.size} commands`);
+            updateStatus();
+            setInterval(updateStatus, 172800000); // 48h
+
+            startupLog(`Ready! Logged in as ${client.user.tag}`);
+            startupLog(`Serving ${client.guilds.cache.size} guild(s)`);
+            startupLog(`Loaded ${client.commands.size} commands`);
 
       const reconciliationSummary = await reconcileReactionRoleMessages(client);
       startupLog(
